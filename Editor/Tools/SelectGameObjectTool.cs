@@ -39,7 +39,7 @@ namespace McpUnity.Tools
                     "validation_error"
                 );
             }
-            
+
             // First try to find by instance ID if provided
             if (instanceId.HasValue)
             {
@@ -54,6 +54,16 @@ namespace McpUnity.Tools
             {
                 // Try to find the object by name in the hierarchy
                 selectedGameObject = GameObject.Find(objectName);
+            }
+            
+            if (selectedGameObject == null)
+            {
+                return new JObject
+                {
+                    ["success"] = false,
+                    ["type"] = "text",
+                    ["message"] = $"GameObject not found: {objectPath}"
+                };
             }
             
             Selection.activeGameObject = selectedGameObject;
