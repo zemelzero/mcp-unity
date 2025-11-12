@@ -400,15 +400,18 @@ namespace McpUnity.Tools
                 if (token.Type == JTokenType.String)
                 {
                     string enumName = token.ToObject<string>();
-                    if (Enum.TryParse(targetType, enumName, true, out object result))
+                    try
                     {
+                        object result = Enum.Parse(targetType, enumName, true);
                         return result;
                     }
-                    
-                    // If parsing fails, try to convert numeric value
-                    if (int.TryParse(enumName, out int enumValue))
+                    catch (ArgumentException)
                     {
-                        return Enum.ToObject(targetType, enumValue);
+                        // If parsing fails, try to convert numeric value
+                        if (int.TryParse(enumName, out int enumValue))
+                        {
+                            return Enum.ToObject(targetType, enumValue);
+                        }
                     }
                 }
                 // If JToken is a number, convert directly to enum
